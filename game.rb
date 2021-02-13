@@ -1,73 +1,51 @@
+class Game
+end
+
 require_relative 'computer'
+require_relative 'hittable'
 require_relative 'codes'
 require_relative 'output_effects'
-require_relative 'player'
+require_relative 'player_maker'
+require_relative 'player_breaker'
+require_relative 'player_maker_game'
+require_relative 'player_breaker_game'
 require 'pry'
 
 class Game
+  include Hittable
+
   def initialize; end
 
   def play
-    player = Player.new_player
+    player = new_player
     player.is_a?(PlayerMaker) ? PlayerMakerGame.new(player).play : PlayerBreakerGame.new.play(player)
   end
 
   private
 
-  def verify_hits(code, master)
-    code = Marshal.load(Marshal.dump(code))
-    master = Marshal.load(Marshal.dump(master))
-    hits, code_without_exacts, master_without_exacts = verify_exact_hits(code, master)
-    verify_color_hits(hits, code_without_exacts, master_without_exacts)
-  end
+  def new_player
+    puts "\nChoose your role:\n\n1 - Code maker\n\n2 - Code breaker\n\n"
+    option = nil
 
-  def verify_exact_hits(code, master)
-    hits = []
-    exact_indexes = []
+    loop do
+      option = gets.chomp.gsub(/\s+/, '')
+      break if correct_option(option)
 
-    code.each_with_index do |number, index|
-      if number == master[index]
-        hits << Codes.full_circle
-        exact_indexes << index
-      end
+      puts "\nJust type 1 or 2:\n\n"
     end
 
-    [hits, remove_indexes(code, exact_indexes), remove_indexes(master, exact_indexes)]
+    option == '1' ? PlayerMaker.new : PlayerBreaker.new
   end
 
-  def remove_indexes(array, indexes)
-    array.reject.with_index { |_, index| indexes.include? index }
+  def correct_option(option)
+    %w[1 2].include? option
   end
 
-  def verify_color_hits(hits, code_without_exacts, master_without_exacts)
-    code_without_exacts.each do |number|
-      if master_without_exacts.include? number
-        hits << Codes.empty_circle
-        master_without_exacts.delete_at(master_without_exacts.find_index(number))
-      end
-    end
-
-    hits
+  def player_wins(string)
+    puts "\nWhat a great #{string}! You got it.. #{'WIN!!!'.blink.bold.underline}\n\n\n"
   end
 
-  def print_clues_messages(code, clues)
-    code_message = code.map { |number| "#{Codes.color(number)} " }
-    code_message << ['  Clues: ', printable_clues(clues), "\n\n"]
-
-    printable_message = code_message.flatten.reduce('') do |result, current|
-      result + current
-    end
-
-    puts "\n#{printable_message}"
-  end
-
-  def printable_clues(clues)
-    clues.map do |clue|
-      "#{clue} "
-    end
-  end
-
-  def codes_equals?(first_code, second_code)
-    first_code.sort == second_code.sort
+  def player_loses(string)
+    puts "\nMaybe next time.. #{string}\n\n\n"
   end
 end

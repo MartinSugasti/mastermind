@@ -1,4 +1,5 @@
 require_relative 'game'
+require_relative 'computer_maker'
 
 class PlayerBreakerGame < Game
   def initialize
@@ -25,7 +26,7 @@ class PlayerBreakerGame < Game
       break if codes_equals?(guess_code, @master_code) || @round == 12
     end
 
-    codes_equals?(guess_code, @master_code) ? player_wins : player_loses
+    codes_equals?(guess_code, @master_code) ? player_wins('strategy') : player_loses
   end
 
   private
@@ -37,12 +38,8 @@ class PlayerBreakerGame < Game
     [code, hits]
   end
 
-  def player_wins
-    puts "\nWhat a great strategy! You got it.. #{'WIN!!!'.blink.bold.underline}\n\n\n"
-  end
-
   def player_loses
     master_code_message = @master_code.reduce('') { |result, number| "#{result}#{Codes.color(number)} " }
-    puts "\nMaybe next time.. The code was #{master_code_message}\n\n\n"
+    super("The code was #{master_code_message}")
   end
 end
