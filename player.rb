@@ -42,34 +42,3 @@ class Player
     end
   end
 end
-
-class PlayerMaker < Player
-  def choose_master_code
-    puts "\nChoose the master code. Make sure it\'s a tought one:\n\n"
-    code = nil
-
-    loop do
-      correct_code, code = verify_code
-
-      break if correct_code
-    end
-
-    puts "\nThat\'s a wise master code..\n"
-    code
-  end
-end
-
-class PlayerBreaker < Player
-  def guess_code(round)
-    puts "\n##{round}: Choose your guess code:\n\n"
-    code = nil
-
-    loop do
-      correct_code, code = verify_code
-
-      break if correct_code
-    end
-
-    code
-  end
-end
