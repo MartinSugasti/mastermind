@@ -9,7 +9,6 @@ require_relative 'player_maker'
 require_relative 'player_breaker'
 require_relative 'player_maker_game'
 require_relative 'player_breaker_game'
-require 'pry'
 
 class Game
   include Hittable
