@@ -11,7 +11,7 @@ class PlayerMaker < Player
       break if correct_code
     end
 
-    puts "\nThat\'s a wise master code..\n"
+    puts "\nThat\'s a wise master code..\n\n"
     code
   end
 end
