@@ -1,5 +1,5 @@
-require_relative 'output_effects'
 require_relative 'codes'
+require_relative 'output_effects'
 
 module Dialog
   def self.introduction
